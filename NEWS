@@ -1,0 +1,19 @@
+libinklevel 0.8.0
+- Bugfix in RPM creation process (rpath issue)
+- Bugfix which enables ink level detection of Epson Stylus DX7450 and possibly 
+  other newer Epson printers
+
+libinklevel 0.8.0rc2
+
+- Support for the Canon iP2000 printer has been added.
+- The build system has been changed to autoconf and automake.
+- Support for the Canon S500 printer has been added.
+
+libinklevel 0.8.0rc1
+
+- Support for the BJNP protocol (Canon network printers) has been added.
+- Autodetection of catridge types for Canon printers which support CIR has been
+  added.
+- Support for Canon 860i, Canon iP1600 and Canon MP530 has been added.
+- Code cleanup has been performed.
+- Support for Open Solaris has been added.

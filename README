@@ -1,0 +1,28 @@
+For information regarding this software visit its homepage:
+
+http://libinklevel.sourceforge.net/
+
+Installation
+------------
+You need gcc installed. libieee1284 is required (on Linux only). 
+
+tar xzf libinklevel-0.8.0.tar.gz
+cd libinklevel-0.8.0
+./configure
+make
+make install
+
+If you want to build a version from the CVS repository you have to run 
+
+autoreconf --force --install
+
+before you can run the above commands. Additionally you will need autoconf and 
+automake installed on your system.
+
+You can create two RPM packages (libinklevel and libinklevel-devel) by running
+
+make rpm
+
+on systems which have rpmbuild installed.
+
+Markus Heinz <markus.heinz@uni-dortmund.de>

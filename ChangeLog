@@ -1,0 +1,80 @@
+
+0.8.0
+--------
+2009-06-07 bugfix which enables ink level detection of Epson Stylus DX7450
+           and possibly other newer Epson printers
+2009-04-10 bugfix in RPM creation process (libinklevel.spec.in)
+2009-04-09 fixed help message text in configure.in
+2009-03-27 added support for Canon iP2000
+2009-03-27 link libinklevel against libieee1284 on linux
+2009-03-27 more checks on input port number in BJNP code
+2009-03-27 improved consistency of BJNP results when called multiple times
+2009-02-28 bugfix in IEEE1284 device class detection
+2009-02-07 added possibility to build a rpm package
+2009-02-06 changed build system to autoconf and automake
+2009-02-01 added support for Canon S500
+2009-01-24 increased version number to 0.8.0 and interface version to 5
+2009-01-24 unified Makefile for Linux and OpenSolaris
+2009-01-24 added support for BJNP protocol (Canon network printers)
+2009-01-22 added autodetection of catridge types for Canon printers which
+	   support CIR
+2009-01-22 added support for Canon 860i
+2009-01-21 code cleanup
+2008-08-24 added support for Canon iP1600
+2008-08-01 added support for Canon MP530
+2008-07-27 changed printer class detection to case insensitive string
+2008-07-27 increased version number to 0.7.4 and enabled both debugs
+2008-05-25 added port to OpenSolaris
+
+0.7.3
+--------
+2008-05-18 disabled debug and d4lib_debug
+2008-05-18 added empty cartridge detection for old hp printers (unconfirmed)
+2008-04-19 added support for Canon i960
+2008-02-02 added support for Canon S520
+2008-01-29 fixed support for Canon iP2200
+2008-01-07 incremented version information to 0.7.3
+2008-01-07 removed setting ownership to root in Makefile
+2008-01-06 allow user supplied CFLAGS in Makefile
+2008-01-05 added support for Canon iP1800
+2008-01-05 disabled output buffering if debug in enabled, enabled both debugs
+2008-01-04 added support for Canon i965
+2007-12-18 added support for Canon iP4500 (unconfirmed)
+2007-09-30 changed datatype for the length of the command and response
+           for canon printers, added support for the Canon iP5200
+2007-08-25 added support for Canon i950
+2007-08-25 code cleanup: number of supported canon printers no longer hardcoded
+2007-09-15 added support for Canon iP4300
+
+0.7.2
+--------
+2007-07-11 added support for Canon i865 and Canon iP3300
+2007-07-11 removed unused variable in non debug builds (canon.c, epson_new.c)
+2007-07-26 added support for Canon MP160
+2007-07-28 applied Makefile patch
+
+0.7.1
+--------
+2007-03-18 disabled debugging in d4lib.c
+2007-03-18 reduced number of retries in read_from_printer
+
+0.7.0
+--------
+2007-03-09 Canon iP4200 number of cartridges fixed
+2007-03-13 added function for retrieving the version of libinklevel
+2007-03-13 custom device file option for usb printers added
+
+0.6.6rc6
+--------
+2006-10-15 Makefile updated
+2007-01-20 Support for Canon i9100 added
+2007-01-20 canon.c: function decodeCIR replaced
+2007-01-20 canon.c: typo in function decodeDOC fixed
+2007-01-20 Support for Canon i3000 added
+2007-01-20 Makefile: ldconfig call changed
+2007-01-20 Author added
+2007-02-11 New parser for new HP device ids (version 3)
+2007-03-07 New parser for HP device ids extended to version 0, 1, 2 and 4
+2007-03-09 Update of parser for old HP device ids
+2007-03-09 Canon iP4200 cartridge types fixed
+2007-03-09 Made reading from printer non blockingly for Epson printers

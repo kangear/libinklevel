@@ -1,0 +1,5 @@
+# rpm target for rpm based systems
+
+rpm: dist-gzip ${PACKAGE}.spec
+	$(RPMBUILD) -ta ${distdir}.tar.gz
+
