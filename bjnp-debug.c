@@ -67,7 +67,7 @@ void bjnp_get_time (time_t * sec, uint32_t * usec);
 bjnp_loglevel_t str2level (char *level);
 char * level2str (bjnp_loglevel_t level);
 
-#ifndef NDEBUG
+//#ifndef NDEBUG
 
 static void
 u8tohex (uint8_t x, char *str)
@@ -182,7 +182,7 @@ bjnp_hexdump (bjnp_loglevel_t level, char *header, const void *d_,
   bjnp_debug (level, "\n\n");
 }
 
-#endif /* NDEBUG */
+//#endif /* NDEBUG */
 
 void
 bjnp_debug (bjnp_loglevel_t level, const char *fmt, ...)

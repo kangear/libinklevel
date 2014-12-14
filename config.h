@@ -32,7 +32,9 @@
 #define HAVE_GETHOSTNAME 1
 
 /* Define to 1 if you have the `getifaddrs' function. */
+#if !defined(__ANDROID__)
 #define HAVE_GETIFADDRS 1
+#endif
 
 /* Define to 1 if you have the `gettimeofday' function. */
 #define HAVE_GETTIMEOFDAY 1
