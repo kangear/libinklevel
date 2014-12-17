@@ -2,7 +2,7 @@
 #
 LOCAL_PATH:= $(call my-dir)
 include $(CLEAR_VARS)
-
+LOCAL_MODULE_TAGS := eng
 # compile in ARM mode, since the glyph loader/renderer is a hotspot
 # when loading complex pages in the browser
 #
@@ -40,6 +40,7 @@ LOCAL_MODULE:= libinklevel
 
 LOCAL_STATIC_LIBRARIES := \
 	libieee1284
+LOCAL_SHARED_LIBRARIES := liblog
 
 include $(BUILD_STATIC_LIBRARY)
 
@@ -48,4 +49,4 @@ include $(BUILD_STATIC_LIBRARY)
 #
 
 # ink
-include $(LOCAL_PATH)/ink/Android.mk
+#include $(LOCAL_PATH)/ink/Android.mk

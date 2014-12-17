@@ -28,6 +28,12 @@
 #include "bjnp.h"
 #include "canon.h"
 
+#ifdef __ANDROID__
+#include <cutils/log.h>
+#define LOG_TAG "libinklevel"
+#define printf(fmt,args...)  LOGD (fmt ,##args)
+#endif
+
 #ifdef DEBUG
 /* for isprint(), for debug prints */
 #include <ctype.h>
@@ -443,6 +449,7 @@ int get_ink_level_canon_simple(const int mfd, const int port,
     do {
       //fd = open_printer_device(port, device_file, portnumber);
       if (fd < 0) {
+        printf("fd < 0");
         return fd;
       }
 
@@ -493,7 +500,7 @@ int get_ink_level_canon_simple(const int mfd, const int port,
       indexCHD = strstr(buffer+2, "CHD:");
       indexCIR = strstr(buffer+2, "CIR:");
 
-      close(fd);
+      /* close(fd); */
 
     } while (!indexDOC && !indexDWS && !indexCHD && !indexCHD && --retry);
   }
