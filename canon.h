@@ -8,3 +8,5 @@
 
 int get_ink_level_canon(const int port, const char* device_file,
 			const int portnumber, struct ink_level *level);
+int get_ink_level_canon_simple(const int mfd, const int port,
+			const char* device_file, const int portnumber, struct ink_level *level);

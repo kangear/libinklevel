@@ -13,6 +13,15 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+//#include <canon.h>
+
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <string.h>
+#include <sys/ioctl.h>
 
 void usage(void) {
   printf("ink -p \"usb\"|\"parport\" [-n <portnumber>] [-t <threshold>] | -d <device_file>\n");
@@ -160,8 +169,14 @@ int main(int argc, char *argv[]) {
     printf("Not enough memory available.\n");
     return 1;
   }
-  
-  result = get_ink_level(port, devicefile, portnumber, level);
+
+  int fd = open("/dev/usb/lp0", O_RDWR);
+  if(fd < 0) {
+    printf("open printer device error!\n");
+    return 1;
+  }
+
+  result = get_ink_level_canon_simple(fd, port, devicefile, portnumber, level);
 
   if (result != OK) {
     switch (result) {

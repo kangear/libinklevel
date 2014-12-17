@@ -415,6 +415,141 @@ int get_ink_level_canon(const int port, const char* device_file,
   return OK;
 }
 
+int get_ink_level_canon_simple(const int mfd, const int port,
+      const char* device_file, const int portnumber, struct ink_level *level) {
+  int fd = mfd;
+  char cmdGetColors[] =
+    "SSR=BST,SFA,CHD,CIL,CIR,HRI,DBS,DWS,DOC,DSC,DJS,CTK,HCF;";
+  char command[256];
+  int length;
+  int i = 0;
+  char buffer[BUFLEN];
+  char *indexDOC = NULL, *indexDWS = NULL, *indexCHD = NULL, *indexCIR = NULL;
+  int retry = 6; /* You can change this, but keep same parity */
+  levelTab lt;
+
+  if ((port == BJNP) || (port == CUSTOM_BJNP)) {
+    bjnp_get_printer_status(port, device_file,  portnumber, buffer);
+
+    /* The command response is a list of semicolons-separated TOKEN:VALUE.
+       example : DOC:4,00,NO;DWS:1512,1513;CHD:CL;
+       First 2 bytes are response length. Ignoring them. */
+
+    indexDOC = strstr(buffer+2, "DOC:");
+    indexDWS = strstr(buffer+2, "DWS:");
+    indexCHD = strstr(buffer+2, "CHD:");
+    indexCIR = strstr(buffer+2, "CIR:");
+  } else {
+    do {
+      //fd = open_printer_device(port, device_file, portnumber);
+      if (fd < 0) {
+        return fd;
+      }
+
+      /* Get colors command */
+      length = makeCommand_canon(cmdGetColors,
+				 GET_STR_LENGTH(cmdGetColors),
+				 command);
+
+      i = write(fd, command, length);
+      if (i < length) {
+
+        #ifdef DEBUG
+        printf("Could not send command to printer\n");
+        #endif
+
+        close(fd);
+        return COULD_NOT_WRITE_TO_PRINTER;
+      }
+
+      length = read_from_printer(fd, buffer, BUFLEN, 0);
+      if (length <= 0) {
+
+        #ifdef DEBUG
+        printf("Could not read from printer\n");
+        #endif
+        close(fd);
+        return COULD_NOT_READ_FROM_PRINTER;
+      }
+      /* Insert a terminator so that whe can do string operations */
+      buffer[length] = '\0';
+
+      #ifdef DEBUG
+      printf("Command Response: \n");
+      for (i = 0; i<length; i++) {
+      if (isprint(buffer[i]))
+        printf("%c", (unsigned char) buffer[i]);
+      else
+        printf("\\x%02x", (unsigned char) buffer[i]);
+      }
+      printf("\n");
+      #endif
+
+      /* The command response is a list of semicolons-separated TOKEN:VALUE.
+          example : DOC:4,00,NO;DWS:1512,1513;CHD:CL;
+          First 2 bytes are response length. Ignoring them. */
+      indexDOC = strstr(buffer+2, "DOC:");
+      indexDWS = strstr(buffer+2, "DWS:");
+      indexCHD = strstr(buffer+2, "CHD:");
+      indexCIR = strstr(buffer+2, "CIR:");
+
+      close(fd);
+
+    } while (!indexDOC && !indexDWS && !indexCHD && !indexCHD && --retry);
+  }
+
+  if (!indexDOC && !indexDWS && !indexCHD && !indexCHD) {
+
+    #ifdef DEBUG
+    printf("Could not parse output from printer\n");
+    #endif
+
+    return COULD_NOT_PARSE_RESPONSE_FROM_PRINTER;
+  }
+  /* Check CIR ->Ink Fill Detail<- exact ink level */
+  if(indexCIR)
+    decodeCIR(indexCIR,level);
+  else {
+    /* decodeCHD -> Cartridge type <-
+       this fuction will update the level structure with default values depending
+       of the printer definition */
+    if(indexCHD) decodeCHD(indexCHD,level);
+    /* At this state, we must have a valid status.
+       otherwise that means the printer is not supported */
+    if(level->status == RESPONSE_INVALID)	{
+      return PRINTER_NOT_SUPPORTED;
+    }
+
+    /* before processing, set to 100% all ink levels. */
+    for(i=0;i<MAX_CARTRIDGE_TYPES;i++) {
+      lt[i] = 100;
+    }
+    /* Check DWS ->Warning State<- */
+    if(indexDWS) decodeDWS(indexDWS,lt);
+
+    /* Check DOC ->Operator Call<- */
+    if(indexDOC) decodeDOC(indexDOC,lt);
+
+    /* Need to put the level tab computed by the decodexxx functions
+       into the struct inklevel before return */
+    for(i=0;i<MAX_CARTRIDGE_TYPES;i++) {
+      level->levels[i][INDEX_LEVEL] = lt[level->levels[i][INDEX_TYPE]];
+    }
+  }
+  #ifdef DEBUG
+  printf("Ink levels : \n");
+  for(i=0;i<MAX_CARTRIDGE_TYPES;i++) {
+    if(level->levels[i][INDEX_TYPE] != CARTRIDGE_NOT_PRESENT) {
+      printf("Level %d = %d\n",
+	     level->levels[i][INDEX_TYPE],
+	     level->levels[i][INDEX_LEVEL]);
+    }
+  }
+  #endif
+
+  return OK;
+}
+
 /* Taken from CanonUtil::CanonUtilStatus.c */
 static void decodeDWS(char *s, levelTab lt) {
   while ( *s && *s != ';' ) {
